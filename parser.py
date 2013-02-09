@@ -9,10 +9,8 @@ import datetime
 from pymongo import Connection
 connection = Connection()
 landfall = connection.landfall
-landfall.drop_collection('cards')
-landfall.drop_collection('values')
+#landfall.drop_collection('cards')
 cards = landfall.cards
-values = landfall.values
 
 def processHtml(html):
   if html is not None:
@@ -57,15 +55,13 @@ def parseSet(magicSet):
       cardId = card["_id"]
 
     value = {
-      'card': cardId,
       'high': high,
       'medium': medium,
       'low': low,
       'date': datetime.datetime.utcnow(),
     }
 
-    valueId = values.insert(value)
-    cards.update( {"_id": cardId}, {"$push" : {"values" : valueId}} )
+    cards.update( {"_id": cardId}, {"$push" : {"values" : value}} )
     print(name + " : " + str(low))
 
 main = pq(url='http://magic.tcgplayer.com/magic_price_guides.asp')
