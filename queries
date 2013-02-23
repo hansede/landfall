@@ -1,0 +1,19 @@
+# Total value of release
+select 
+  sum(lows.low) 
+from 
+  (select 
+    max(created), 
+    low 
+   from `values` 
+   where card in 
+    (select id 
+    from cards 
+    where `release` in 
+      (select id 
+      from releases 
+      where name = 'Worldwake')) 
+  group by card) as lows;
+  
+# Cards with values by release
+select max(created), low, cards.name from `values`, cards where card in (select id from cards where `release` in (select id from releases where name = 'Worldwake')) and cards.id = values.card group by card;
