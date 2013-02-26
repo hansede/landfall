@@ -6,14 +6,11 @@ from
     max(created), 
     low 
    from `values` 
-   where card in 
+   where card_id in 
     (select id 
     from cards 
-    where `release` in 
-      (select id 
-      from releases 
-      where name = 'Worldwake')) 
-  group by card) as lows;
+    where `release` = 'Worldwake')
+  group by card_id) as lows;
   
 # Cards with values by release
-select max(created), low, cards.name from `values`, cards where card in (select id from cards where `release` in (select id from releases where name = 'Worldwake')) and cards.id = values.card group by card;
+select max(created), low, cards.name from `values`, cards where card_id in (select id from cards where `release` = 'Worldwake') and cards.id = values.card_id group by card_id order by low desc;
