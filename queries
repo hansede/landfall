@@ -14,3 +14,8 @@ from
   
 # Cards with values by release
 select max(created), low, cards.name from `values`, cards where card_id in (select id from cards where `release` = 'Worldwake') and cards.id = values.card_id group by card_id order by low desc;
+
+select new.medium - old.medium as diff from prices as new, prices as old, (select max(created) as maxCreated, min(created) as minCreated, card_id from prices where card_id in (select id from cards where id in (select id from cards where rel = "gatecrash")) group by card_id) as dateTable where new.created = dateTable.maxCreated and new.card_id = dateTable.card_id and old.created = dateTable.minCreated and old.card_id = dateTable.card_id;
+
+# Total change in values of all cards
+select sum(new.medium - old.medium) as diff from prices as new, prices as old, (select max(created) as maxCreated, min(created) as minCreated, card_id from prices where card_id in (select id from cards where id in (select id from cards)) group by card_id) as dateTable where new.created = dateTable.maxCreated and new.card_id = dateTable.card_id and old.created = dateTable.minCreated and old.card_id = dateTable.card_id;
